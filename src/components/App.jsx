@@ -1,51 +1,37 @@
 import css from './StyleContainer.module.css';
 import React from 'react';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactForm/ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 
-export const App =() => {
-const[contacts,setContacts] = useState([
+export const App = () => {
+  const [contacts, setContacts] = useState([
     { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-]);
-const[filter,setFilter] = useState('');
-const [firstRenderFlag, setFlag] = useState(true);
+    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  ]);
+  const [filter, setFilter] = useState('');
+  const [firstRenderFlag, setFlag] = useState(true);
 
-//   useEffect (()=>{
-//     const contactsFromLocalStorage = localStorage.getItem('contactList');
-//     const parsedContacts = JSON.parse(contactsFromLocalStorage);
+  useEffect(() => {
+    if (firstRenderFlag) {
+      const contactsFromLocalStorage = localStorage.getItem('contactList');
 
-//     if (parsedContacts) {
-//       setContacts(parsedContacts);
-//     }
-//   },[]); 
-    
-  
-// useEffect (()=>{
-//   localStorage.setItem('contactList', JSON.stringify(contacts))
-// },[contacts]);
+      if (contactsFromLocalStorage !== 'undefined') {
+        const parsedContacts = JSON.parse(contactsFromLocalStorage);
 
-useEffect(() => {
-  if (firstRenderFlag) {
-    const contactsFromLocalStorage = localStorage.getItem('contactList');
-
-    if (contactsFromLocalStorage !== 'undefined') {
-      const parsedContacts = JSON.parse(contactsFromLocalStorage);
-
-      if (parsedContacts) {
-        setContacts(parsedContacts);
+        if (parsedContacts) {
+          setContacts(parsedContacts);
+        }
       }
+      setFlag(false);
+    } else {
+      localStorage.setItem('contactList', JSON.stringify(contacts));
     }
-    setFlag(false);
-  } else {
-    localStorage.setItem('contactList', JSON.stringify(contacts));
-  }
-}, [contacts, firstRenderFlag]);
+  }, [contacts, firstRenderFlag]);
 
   const handleChange = e => {
     const { value } = e.target;
@@ -67,34 +53,28 @@ useEffect(() => {
     setContacts(contactsLists);
   };
 
- const handleDelete = contactId => {
-    setContacts(contacts.filter(contact => contact.id !== contactId))};
-
-
- 
+  const handleDelete = contactId => {
+    setContacts(contacts.filter(contact => contact.id !== contactId));
+  };
 
   const getFilteredContacts = () => {
     const filterContactsList = contacts.filter(contact => {
-      return contact.name
-        .toLowerCase()
-        .includes(filter.toLowerCase());
+      return contact.name.toLowerCase().includes(filter.toLowerCase());
     });
 
     return filterContactsList;
   };
 
- 
-    return (
-      <div className={css.container}>
-        <h1>Phonebook</h1>
-        <ContactForm handleSubmit={handleSubmit} />
-        <h2> Contacts</h2>
-        <Filter filter={filter} handleChange={handleChange} />
-        <ContactList
-          contacts={getFilteredContacts()}
-          handleDelete={handleDelete}
-        />
-      </div>
-    );
-  }
-
+  return (
+    <div className={css.container}>
+      <h1>Phonebook</h1>
+      <ContactForm handleSubmit={handleSubmit} />
+      <h2> Contacts</h2>
+      <Filter filter={filter} handleChange={handleChange} />
+      <ContactList
+        contacts={getFilteredContacts()}
+        handleDelete={handleDelete}
+      />
+    </div>
+  );
+};
