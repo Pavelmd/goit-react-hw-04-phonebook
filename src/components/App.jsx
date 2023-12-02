@@ -47,10 +47,12 @@ export const App = () => {
     if (contactsLists.find(contact => name.toLowerCase() === contact.name.toLowerCase())) {
       alert(`${name} is already in contacts.`);
     } else {
-      contactsLists.push({ name, id, number });
+      setContacts(prevContacts => [
+        ...prevContacts,
+        { name, id, number },
+      ]);
+      
     }
-
-    setContacts(contactsLists);
   };
 
   const handleDelete = contactId => {
