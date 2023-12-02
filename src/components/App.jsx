@@ -44,7 +44,7 @@ export const App = () => {
     const number = e.number;
     const contactsLists = [...contacts];
 
-    if (contactsLists.findIndex(contact => name === contact.name) !== -1) {
+    if (contactsLists.find(contact => name.toLowerCase() === contact.name.toLowerCase())) {
       alert(`${name} is already in contacts.`);
     } else {
       contactsLists.push({ name, id, number });
